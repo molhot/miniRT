@@ -38,5 +38,7 @@ typedef struct	s_data {
 t_vector	*vectorsum_dim(t_vector *cont1, t_vector *cont2);
 t_vector	*vectorminus_dim(t_vector *cont1, t_vector *cont2);
 t_vector	*vectorinpuro_dim(t_vector *cont1, t_vector *cont2);
+int			constrain(int num, int min, int max);
+int			 map(int num, int min, int max, int t_min, int t_max);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 15:38:49 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/03/30 17:28:03 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/01 17:26:59 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,17 @@ t_vector	*vectorinpuro_dim(t_vector *cont1, t_vector *cont2)
 	sum_vector->y = cont1->y * cont2->y;
 	sum_vector->z = cont1->z * cont2->z;
 
+	return (sum_vector);
+}
+
+t_vector	*vectoroupro_dim(t_vector *cont1, t_vector *cont2)
+{
+	t_vector	*sum_vector;
+
+	sum_vector = malloc(sizeof(t_vector) * 1);
+	sum_vector->x = (cont1->y * cont2->z) - (cont1->z * cont2->y);
+	sum_vector->y = (cont1->z * cont2->x) - (cont1->x * cont2->z);
+	sum_vector->z = (cont1->x * cont2->y) - (cont1->y * cont2->x);
 	return (sum_vector);
 }
 
