@@ -2,7 +2,8 @@ NAME = miniRT
 LIBMLX = minilibx-linux/libmlx_Linux.a
 
 SRCS = miniRT_main.c\
-		calculate_vector/dimension_vectorcal.c
+		calculate_vector/dimension_vectorcal.c\
+		vector_utils/ready_parsevector.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -12,8 +13,8 @@ CFLAGS = -Wall -Wextra -Werror -I includes
 
 all: $(NAME)
 
-${NAME}: ${SRCS} ${LIBMLX}
-	${CC} ${SRCS} ${LIBMLX} -lX11 -lXext -o ${NAME}
+${NAME}: ${OBJS} ${LIBMLX}
+	${CC} ${OBJS} ${LIBMLX} -lm -lX11 -lXext -o $(NAME)
 
 ${LIBMLX}:
 	make -C minilibx-linux/
@@ -23,7 +24,6 @@ clean:
 
 fclean: clean
 	rm -rf ${NAME}
-	make clean -C mlx/
 
 re: fclean all
 

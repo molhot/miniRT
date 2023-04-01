@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dimension_vectorcal.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 15:38:49 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/01 17:26:59 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/02 02:53:17 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,14 @@ t_vector	*vectoroupro_dim(t_vector *cont1, t_vector *cont2)
 	sum_vector->y = (cont1->z * cont2->x) - (cont1->x * cont2->z);
 	sum_vector->z = (cont1->x * cont2->y) - (cont1->y * cont2->x);
 	return (sum_vector);
+}
+
+double	vector_size(t_vector *vec)
+{
+	double	sum_pow;
+
+	sum_pow = pow(vec->x, 2) + pow(vec->y, 2) + pow(vec->z, 2);
+	return (sqrt(sum_pow)); 
 }
 
 /*test
