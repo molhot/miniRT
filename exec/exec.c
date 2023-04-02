@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:38:33 by user              #+#    #+#             */
-/*   Updated: 2023/04/02 21:19:30 by user             ###   ########.fr       */
+/*   Updated: 2023/04/03 00:50:11 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,15 @@ double  intersection_on_circle(t_vector *dir_vec, t_vector *dir_tomiddlecir, dou
     double two_ans;
 
 	coefficient_A = pow(vector_size(dir_vec), 2);
-	coefficient_B = 2 * (dir_vec->x * dir_tomiddlecir->x + dir_vec->y * dir_tomiddlecir->y + dir_vec->z * dir_tomiddlecir->z);
+	coefficient_B = 2 * (dir_vec->x * ((dir_tomiddlecir)->x) + dir_vec->y * (dir_tomiddlecir->y) + dir_vec->z * (dir_tomiddlecir->z));
 	coefficient_C = pow(vector_size(dir_tomiddlecir), 2) - pow(r, 2);
 
     if ((pow(coefficient_B, 2) - 4 * coefficient_A * coefficient_C) == 0)
         return (-1 * coefficient_B / (2 * coefficient_A));
-    one_ans = (-1 * coefficient_B + sqrt(pow(coefficient_B, 2) - 4 * coefficient_A * coefficient_C)) / (2 * coefficient_A);
-    two_ans = (-1 * coefficient_B - sqrt(pow(coefficient_B, 2) - 4 * coefficient_A * coefficient_C)) / (2 * coefficient_A);
+    one_ans = (-1 * coefficient_B + sqrt(d_coeffi(dir_vec, dir_tomiddlecir, r))) / (2 * coefficient_A);
+    two_ans = (-1 * coefficient_B - sqrt(d_coeffi(dir_vec, dir_tomiddlecir, r))) / (2 * coefficient_A);
+    //printf("one %f\n", one_ans);
+    //printf("two %f\n", two_ans);
     if (one_ans < 0 || two_ans < 0)
     {
         if (one_ans < 0)
@@ -75,20 +77,20 @@ void    exec(t_data *info, int x_start, int y_start)
     t_vector	*dir_dim_vec;
     t_vector    *before_intersection;
     t_vector    *intersection_vect_dummy;
-    t_vector    *intersection_vect;
+    //t_vector    *intersection_vect;
     t_vector    *light_to_oncircle_;
     t_vector    *light_to_oncircle_unitvec;
     t_vector    *lastvec;
     t_vector    *parsevect;
     double      l_n_inpro;
+    double      size;
 
     double      r = 1;
     size_t      i = 0;
+    double      t;
 
-    intersection_vect = malloc(sizeof(t_vector) * 1);
-    light_to_oncircle_ = malloc(sizeof(t_vector) * 1);
+    //intersection_vect = malloc(sizeof(t_vector) * 1);
     light_to_oncircle_unitvec = malloc(sizeof(t_vector) * 1);
-    before_intersection = malloc(sizeof(t_vector) * 1);
     intersection_vect_dummy = malloc(sizeof(t_vector) * 1);
     dir_dim_vec = malloc(sizeof(t_vector) * 1);
     lastvec = malloc(sizeof(t_vector) * 1);
@@ -99,29 +101,40 @@ void    exec(t_data *info, int x_start, int y_start)
 		{
 			ready_pointvector(info->fixedpoint_vec.onepointvec, x_start, y_start, info->screenwidth, info->screenheight);
 			eye_vect = vectorminus_dim(info->fixedpoint_vec.onepointvec, info->fixedpoint_vec.parse_vec);
-			eye_tomidllecircle = vectorminus_dim(info->fixedpoint_vec.shape_midvec, info->fixedpoint_vec.parse_vec);
+			eye_tomidllecircle = vectorminus_dim(info->fixedpoint_vec.parse_vec, info->fixedpoint_vec.shape_midvec);
             ready_persevector(dir_dim_vec, eye_vect->x / vector_size(eye_vect), eye_vect->y / vector_size(eye_vect), eye_vect->z / vector_size(eye_vect));
-			if (d_coeffi(dir_dim_vec, eye_tomidllecircle, r) >= 0)
+			if (d_coeffi(eye_vect, eye_tomidllecircle, r) >= 0)
             {
-                double t = intersection_on_circle(dir_dim_vec, eye_tomidllecircle, r);
+                t = intersection_on_circle(eye_vect, eye_tomidllecircle, r);
                 parsevect = info->fixedpoint_vec.parse_vec;
-                ready_persevector(intersection_vect_dummy, parsevect->x + (dir_dim_vec->x * t), parsevect->y + (dir_dim_vec->y * t), parsevect->z + (dir_dim_vec->z * t));
+                //printf("x %f | y %f | z %f | %f\n", parsevect->x, parsevect->y, parsevect->z ,vector_size(parsevect));
+                //printf("x %f | y %f | z %f | %f\n", eye_vect->x, eye_vect->y, eye_vect->z ,vector_size(eye_vect));
+                ready_persevector(intersection_vect_dummy, parsevect->x + (eye_vect->x * t), parsevect->y + (eye_vect->y * t), parsevect->z + (eye_vect->z * t));
+                //printf("x %f | y %f | z %f | %f\n", intersection_vect_dummy->x, intersection_vect_dummy->y, intersection_vect_dummy->z ,vector_size(intersection_vect_dummy));
+                //printf("t>%f %f\n", t, t * vector_size(intersection_vect_dummy));
                 light_to_oncircle_ = vectorminus_dim(info->fixedpoint_vec.lightsource, intersection_vect_dummy);
-                ready_persevector(light_to_oncircle_unitvec, light_to_oncircle_->x / vector_size(light_to_oncircle_), light_to_oncircle_->y / vector_size(light_to_oncircle_), light_to_oncircle_->z / vector_size(light_to_oncircle_));
-
-                ready_persevector(intersection_vect, dir_dim_vec->x *  t, dir_dim_vec->y * t, dir_dim_vec->z * t);
-                before_intersection = vectorminus_dim(intersection_vect, eye_tomidllecircle);
-                ready_persevector(lastvec, before_intersection->x / vector_size(before_intersection), before_intersection->y / vector_size(before_intersection), before_intersection->z / vector_size(before_intersection));
+                size = vector_size(light_to_oncircle_);
+                ready_persevector(light_to_oncircle_unitvec, light_to_oncircle_->x / size, light_to_oncircle_->y / size, light_to_oncircle_->z / size);
+                before_intersection = vectorminus_dim(intersection_vect_dummy, info->fixedpoint_vec.shape_midvec);
+                size = vector_size(before_intersection);
+                ready_persevector(lastvec, before_intersection->x / size, before_intersection->y / size, before_intersection->z / size);
                 l_n_inpro = vectorinpuro_dim(lastvec, light_to_oncircle_unitvec);
-                // if (l_n_inpro < 0)
-                //     l_n_inpro = 0;
                 if (l_n_inpro > 0)
                     i++;
+                //printf("%f\n", l_n_inpro);
                 l_n_inpro = map(l_n_inpro, -1, 1, 0, 1);
-				my_mlx_pixel_put(info, x_start, y_start, 0xFF00000 * l_n_inpro * l_n_inpro * l_n_inpro);
+				//my_mlx_pixel_put(info, x_start, y_start, ((int)(255 * l_n_inpro))<<16 | ((int)(255 * l_n_inpro)) << 8 | (int)(255 * l_n_inpro));
+                my_mlx_pixel_put(info, x_start, y_start, 0xFF0000 * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro);
+                //my_mlx_pixel_put(&data, x, y, r << 16 | g << 8 | b);
+                free(light_to_oncircle_);
+                free(before_intersection);
+                free(lastvec);
+                lastvec = malloc(sizeof(t_vector) * 1);
             }
 			else
 				my_mlx_pixel_put(info, x_start, y_start, 0x00FF00FF);
+            free(eye_vect);
+            free(eye_tomidllecircle);
 			x_start++;
 		}
 		y_start++;
