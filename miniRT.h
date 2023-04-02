@@ -25,14 +25,22 @@ typedef	struct s_vector
 	double	z;
 }t_vector;
 
+typedef struct s_vectors
+{
+	t_vector	*parse_vec;
+	t_vector	*shape_midvec;
+	t_vector	*onepointvec;
+} t_vectors;
+
 typedef struct	s_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	void	*mlx;
-	void	*mlx_win;
+	t_vectors	fixedpoint_vec;
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	void		*mlx;
+	void		*mlx_win;
 } t_data;
 
 t_vector	*vectorsum_dim(t_vector *cont1, t_vector *cont2);
@@ -40,7 +48,7 @@ t_vector	*vectorminus_dim(t_vector *cont1, t_vector *cont2);
 t_vector	*vectorinpuro_dim(t_vector *cont1, t_vector *cont2);
 int			constrain(int num, int min, int max);
 int			map(int num, int min, int max, int t_min, int t_max);
-void		ready_persevector(t_vector *vector, int x, int y, int z);
+void    ready_persevector(t_vector *vector, double x, double y, double z);
 double		vector_size(t_vector *vec);
 
 #endif

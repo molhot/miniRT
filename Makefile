@@ -7,7 +7,7 @@ SRCS = miniRT_main.c\
 
 OBJS = $(SRCS:.c=.o)
 
-CC = cc -fsanitize=address -fno-omit-frame-pointer
+CC = gcc -g -fsanitize=address -fno-omit-frame-pointer
 
 CFLAGS = -Wall -Wextra -Werror -I includes
 
