@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   constrain.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 23:54:48 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/01 00:02:09 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/02 21:13:10 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../miniRT.h"
 
-int	constrain(int num, int min, int max)
+double	constrain(double num, double min, double max)
 {
 	if (min > num)
 		return (min);
@@ -22,10 +22,15 @@ int	constrain(int num, int min, int max)
 		return (max);
 }
 
-int map(int num, int min, int max, int t_min, int t_max)
+double map(double num, double min, double max, double t_min, double t_max)
 {
-	int	constrain_num;
+	double	constrain_num;
+	double	tmp;
 
 	constrain_num = constrain(num, min, max);
-	return (t_min + (t_max - t_min) * constrain_num / (max - min));
+	tmp = t_min + (t_max - t_min) * constrain_num / (max - min);
+	if (tmp < t_min)
+		return (t_min);
+	else
+		return (tmp);
 }

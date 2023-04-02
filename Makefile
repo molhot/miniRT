@@ -2,12 +2,15 @@ NAME = miniRT
 LIBMLX = minilibx-linux/libmlx_Linux.a
 
 SRCS = miniRT_main.c\
+		utils/constrain.c\
+		constructor/construct.c\
+		exec/exec.c\
 		calculate_vector/dimension_vectorcal.c\
 		vector_utils/ready_parsevector.c
 
 OBJS = $(SRCS:.c=.o)
 
-CC = gcc -g -fsanitize=address -fno-omit-frame-pointer
+CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -I includes
 
