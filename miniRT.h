@@ -18,11 +18,20 @@
 # include <stdlib.h>
 # include "minilibx-linux/mlx.h"
 
-typedef	struct s_vector
+typedef	struct s_unitvect
 {
 	double	x;
 	double	y;
 	double	z;
+}t_unitvect;
+
+typedef	struct s_vector
+{
+	double		x;
+	double		y;
+	double		z;
+	double		size;
+	t_unitvect	unitvect;
 }t_vector;
 
 typedef struct s_ambientlight
@@ -67,5 +76,6 @@ void    	ready_persevector(t_vector *vector, double x, double y, double z);
 double		vector_size(t_vector *vec);
 void	    construct(t_data *info);
 void	    exec(t_data *info, int x_start, int y_start);
+void		unitvect_set(t_vector *sub);
 
 #endif

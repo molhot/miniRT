@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                      */
-/*                            :::     ::::::::   */
-/*   exec.c            :+:   :+:    :+:   */
-/*                          +:+ +:+       +:+    */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+    */
-/*                        +#+#+#+#+#+   +#+     */
-/*   Created: 2023/04/02 14:38:33 by user           #+#  #+#          */
-/*   Updated: 2023/04/03 16:42:22 by mochitteiun      ###   ########.fr    */
-/*                                      */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
+/*   Updated: 2023/04/03 18:56:05 by mochitteiun      ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../miniRT.h"
@@ -73,10 +73,10 @@ void    exec(t_data *info, int x_start, int y_start)
     t_vector	*eye_scrn;
     t_vector    *eye_shapemid;
     t_vector    *shapemid_shapeis;
-    t_vector    *o_shapeis;
+    t_vector    o_shapeis;
     t_vector    *shapeis_lit;
-    t_vector    *shapeis_lit_unitvec;
-    t_vector    *shapemid_shapeis_unitvec;
+    t_vector    shapeis_lit_unitvec;
+    t_vector    shapemid_shapeis_unitvec;
     t_vector    *parsevect;
     double    l_n_inpro;
     double    size;
@@ -84,10 +84,6 @@ void    exec(t_data *info, int x_start, int y_start)
     double    r = 1;
     size_t    i = 0;
     double    t;
-
-    shapeis_lit_unitvec = malloc(sizeof(t_vector) * 1);
-    o_shapeis = malloc(sizeof(t_vector) * 1);
-    shapemid_shapeis_unitvec = malloc(sizeof(t_vector) * 1);
 
     while (y_start != info->screenheight)
 	{
@@ -100,23 +96,20 @@ void    exec(t_data *info, int x_start, int y_start)
             {
                 t = intersection_on_circle(eye_scrn, eye_shapemid, r);
                 parsevect = info->fixedpoint_vec.parse_vec;
-                ready_persevector(o_shapeis, parsevect->x + (eye_scrn->x * t), parsevect->y + (eye_scrn->y * t), parsevect->z + (eye_scrn->z * t));
-                shapeis_lit = vectorminus_dim(info->fixedpoint_vec.lightsource, o_shapeis);
+                ready_persevector(&o_shapeis, parsevect->x + (eye_scrn->x * t), parsevect->y + (eye_scrn->y * t), parsevect->z + (eye_scrn->z * t));
+                shapeis_lit = vectorminus_dim(info->fixedpoint_vec.lightsource, &o_shapeis);
                 size = vector_size(shapeis_lit);
-                ready_persevector(shapeis_lit_unitvec, shapeis_lit->x / size, shapeis_lit->y / size, shapeis_lit->z / size);
-                shapemid_shapeis = vectorminus_dim(o_shapeis, info->fixedpoint_vec.shape_midvec);
+                ready_persevector(&shapeis_lit_unitvec, shapeis_lit->x / size, shapeis_lit->y / size, shapeis_lit->z / size);
+                shapemid_shapeis = vectorminus_dim(&o_shapeis, info->fixedpoint_vec.shape_midvec);
                 size = vector_size(shapemid_shapeis);
-                ready_persevector(shapemid_shapeis_unitvec, shapemid_shapeis->x / size, shapemid_shapeis->y / size, shapemid_shapeis->z / size);
-                l_n_inpro = vectorinpuro_dim(shapemid_shapeis_unitvec, shapeis_lit_unitvec);
+                ready_persevector(&shapemid_shapeis_unitvec, shapemid_shapeis->x / size, shapemid_shapeis->y / size, shapemid_shapeis->z / size);
+                l_n_inpro = vectorinpuro_dim(&shapemid_shapeis_unitvec, &shapeis_lit_unitvec);
                 if (l_n_inpro > 0)
                     i++;
                 l_n_inpro = map(l_n_inpro, -1, 1, 0, 1);
                 my_mlx_pixel_put(info, x_start, y_start, ((int)(255 * l_n_inpro) << 16) | ((int)(255 * l_n_inpro) << 8) | (int)(255 * l_n_inpro));
-                //my_mlx_pixel_put(info, x_start, y_start, 0xFF0000 * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro);
                 free(shapeis_lit);
                 free(shapemid_shapeis);
-                free(shapemid_shapeis_unitvec);
-                shapemid_shapeis_unitvec = malloc(sizeof(t_vector) * 1);
             }
 			else
 				my_mlx_pixel_put(info, x_start, y_start, 0x00FF00FF);

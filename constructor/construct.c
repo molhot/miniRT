@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:25:28 by user              #+#    #+#             */
-/*   Updated: 2023/04/03 00:21:56 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/03 18:30:48 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void    construct(t_data *info)
 	info->fixedpoint_vec.shape_midvec = malloc(sizeof(t_vector) * 1);
     info->fixedpoint_vec.lightsource = malloc(sizeof(t_vector) * 1);
     ready_persevector(info->fixedpoint_vec.parse_vec, 0, 0, -5);
+    unitvect_set(info->fixedpoint_vec.parse_vec);
 	ready_persevector(info->fixedpoint_vec.shape_midvec, 0, 0, 5);
+    unitvect_set(info->fixedpoint_vec.shape_midvec);
     ready_persevector(info->fixedpoint_vec.lightsource, -5, 5, -5);
+    unitvect_set(info->fixedpoint_vec.lightsource);
 }
