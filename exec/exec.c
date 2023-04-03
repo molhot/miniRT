@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/02 14:38:33 by user              #+#    #+#             */
-/*   Updated: 2023/04/03 16:26:04 by mochitteiun      ###   ########.fr       */
-/*                                                                            */
+/*                                      */
+/*                            :::     ::::::::   */
+/*   exec.c            :+:   :+:    :+:   */
+/*                          +:+ +:+       +:+    */
+/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+    */
+/*                        +#+#+#+#+#+   +#+     */
+/*   Created: 2023/04/02 14:38:33 by user           #+#  #+#          */
+/*   Updated: 2023/04/03 16:42:22 by mochitteiun      ###   ########.fr    */
+/*                                      */
 /* ************************************************************************** */
 
 #include "../miniRT.h"
@@ -71,26 +71,23 @@ void	ready_pointvector(t_vector *point, double x, double y, int WIDTH, int HEIGH
 void    exec(t_data *info, int x_start, int y_start)
 {
     t_vector	*eye_scrn;
-	t_vector	*eye_tomidllecircle;
-    t_vector	*dir_dim_vec;
-    t_vector    *before_intersection;
-    t_vector    *intersection_vect_dummy;
-    t_vector    *light_to_oncircle_;
-    t_vector    *light_to_oncircle_unitvec;
-    t_vector    *lastvec;
+    t_vector    *eye_shapemid;
+    t_vector    *shapemid_shapeis;
+    t_vector    *o_shapeis;
+    t_vector    *shapeis_lit;
+    t_vector    *shapeis_lit_unitvec;
+    t_vector    *shapemid_shapeis_unitvec;
     t_vector    *parsevect;
-    double      l_n_inpro;
-    double      size;
+    double    l_n_inpro;
+    double    size;
 
-    double      r = 1;
-    size_t      i = 0;
-    double      t;
+    double    r = 1;
+    size_t    i = 0;
+    double    t;
 
-    //intersection_vect = malloc(sizeof(t_vector) * 1);
-    light_to_oncircle_unitvec = malloc(sizeof(t_vector) * 1);
-    intersection_vect_dummy = malloc(sizeof(t_vector) * 1);
-    dir_dim_vec = malloc(sizeof(t_vector) * 1);
-    lastvec = malloc(sizeof(t_vector) * 1);
+    shapeis_lit_unitvec = malloc(sizeof(t_vector) * 1);
+    o_shapeis = malloc(sizeof(t_vector) * 1);
+    shapemid_shapeis_unitvec = malloc(sizeof(t_vector) * 1);
 
     while (y_start != info->screenheight)
 	{
@@ -98,34 +95,33 @@ void    exec(t_data *info, int x_start, int y_start)
 		{
 			ready_pointvector(info->fixedpoint_vec.onepointvec, x_start, y_start, info->screenwidth, info->screenheight);
 			eye_scrn = vectorminus_dim(info->fixedpoint_vec.onepointvec, info->fixedpoint_vec.parse_vec);
-			eye_tomidllecircle = vectorminus_dim(info->fixedpoint_vec.parse_vec, info->fixedpoint_vec.shape_midvec);
-            ready_persevector(dir_dim_vec, eye_scrn->x / vector_size(eye_scrn), eye_scrn->y / vector_size(eye_scrn), eye_scrn->z / vector_size(eye_scrn));
-			if (d_coeffi(eye_scrn, eye_tomidllecircle, r) >= 0)
+			eye_shapemid = vectorminus_dim(info->fixedpoint_vec.parse_vec, info->fixedpoint_vec.shape_midvec);
+			if (d_coeffi(eye_scrn, eye_shapemid, r) >= 0)
             {
-                t = intersection_on_circle(eye_scrn, eye_tomidllecircle, r);
+                t = intersection_on_circle(eye_scrn, eye_shapemid, r);
                 parsevect = info->fixedpoint_vec.parse_vec;
-                ready_persevector(intersection_vect_dummy, parsevect->x + (eye_scrn->x * t), parsevect->y + (eye_scrn->y * t), parsevect->z + (eye_scrn->z * t));
-                light_to_oncircle_ = vectorminus_dim(info->fixedpoint_vec.lightsource, intersection_vect_dummy);
-                size = vector_size(light_to_oncircle_);
-                ready_persevector(light_to_oncircle_unitvec, light_to_oncircle_->x / size, light_to_oncircle_->y / size, light_to_oncircle_->z / size);
-                before_intersection = vectorminus_dim(intersection_vect_dummy, info->fixedpoint_vec.shape_midvec);
-                size = vector_size(before_intersection);
-                ready_persevector(lastvec, before_intersection->x / size, before_intersection->y / size, before_intersection->z / size);
-                l_n_inpro = vectorinpuro_dim(lastvec, light_to_oncircle_unitvec);
+                ready_persevector(o_shapeis, parsevect->x + (eye_scrn->x * t), parsevect->y + (eye_scrn->y * t), parsevect->z + (eye_scrn->z * t));
+                shapeis_lit = vectorminus_dim(info->fixedpoint_vec.lightsource, o_shapeis);
+                size = vector_size(shapeis_lit);
+                ready_persevector(shapeis_lit_unitvec, shapeis_lit->x / size, shapeis_lit->y / size, shapeis_lit->z / size);
+                shapemid_shapeis = vectorminus_dim(o_shapeis, info->fixedpoint_vec.shape_midvec);
+                size = vector_size(shapemid_shapeis);
+                ready_persevector(shapemid_shapeis_unitvec, shapemid_shapeis->x / size, shapemid_shapeis->y / size, shapemid_shapeis->z / size);
+                l_n_inpro = vectorinpuro_dim(shapemid_shapeis_unitvec, shapeis_lit_unitvec);
                 if (l_n_inpro > 0)
                     i++;
                 l_n_inpro = map(l_n_inpro, -1, 1, 0, 1);
                 my_mlx_pixel_put(info, x_start, y_start, ((int)(255 * l_n_inpro) << 16) | ((int)(255 * l_n_inpro) << 8) | (int)(255 * l_n_inpro));
                 //my_mlx_pixel_put(info, x_start, y_start, 0xFF0000 * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro * l_n_inpro);
-                free(light_to_oncircle_);
-                free(before_intersection);
-                free(lastvec);
-                lastvec = malloc(sizeof(t_vector) * 1);
+                free(shapeis_lit);
+                free(shapemid_shapeis);
+                free(shapemid_shapeis_unitvec);
+                shapemid_shapeis_unitvec = malloc(sizeof(t_vector) * 1);
             }
 			else
 				my_mlx_pixel_put(info, x_start, y_start, 0x00FF00FF);
             free(eye_scrn);
-            free(eye_tomidllecircle);
+            free(eye_shapemid);
 			x_start++;
 		}
 		y_start++;
