@@ -2,9 +2,12 @@ NAME = miniRT
 LIBMLX = minilibx-linux/libmlx_Linux.a
 
 SRCS = miniRT_main.c\
-		exec/exec.c\
 		constructor/construct.c\
-		handling_vector/CalcVars_vec.c handling_vector/calc_utils.c\
+		exec/exec.c\
+			exec/calcvect/CalcVars_vec.c\
+			exec/calcvect/calc_its.c\
+			exec/drawfunc/putpixcel.c\
+		handling_vector/calc_utils.c\
 		vectorset/vectorset.c\
 		utils/constrain.c
 

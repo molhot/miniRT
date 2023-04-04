@@ -68,7 +68,13 @@ typedef struct	s_data {
 double		constrain(double num, double min, double max);
 double		map(double num, double min, double max, double t_min, double t_max);
 void		construct(t_data *info);
+
+//exec
 void		exec(t_data *info, int x_start, int y_start);
+void		my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void		draw_fadecolor(double i, t_data *data, int x, int y);
+double		d_coeffi(t_vector *dir_vec, t_vector *dir_tomiddlecir, double r);
+double		intersection_on_circle(t_vector *dir_vec, t_vector *dir_tomiddlecir, double r);
 
 //vectorset
 void		ready_vector(t_vectors *vectors, double x, double y, double z);
@@ -82,6 +88,5 @@ double		vectorinpuro(t_vector *cont1, t_vector *cont2);
 t_vectors	*vectoroupro(t_vector *cont1, t_vector *cont2);
 //calc_utils
 double		vector_size(t_vector *vec);
-
 
 #endif
