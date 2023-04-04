@@ -18,21 +18,19 @@
 # include <stdlib.h>
 # include "minilibx-linux/mlx.h"
 
-typedef	struct s_unitvect
+typedef	struct s_vector
 {
 	double	x;
 	double	y;
 	double	z;
-}t_unitvect;
-
-typedef	struct s_vector
-{
-	double		x;
-	double		y;
-	double		z;
-	double		size;
-	t_unitvect	unitvect;
 }t_vector;
+
+typedef	struct s_vectors
+{
+	t_vector	vect;
+	t_vector	unitvect;
+	double		size;
+}t_vectors;
 
 typedef struct s_ambientlight
 {
@@ -41,13 +39,13 @@ typedef struct s_ambientlight
 	double intensity;
 } t_ambientlight;
 
-typedef struct s_vectors
+typedef struct s_fixedcevts
 {
-	t_vector	*parse_vec;
-	t_vector	*shape_midvec;
-	t_vector	*onepointvec;
-	t_vector	*lightsource;
-} t_vectors;
+	t_vectors	*parse_vec;
+	t_vectors	*shape_midvec;
+	t_vectors	*onepointvec;
+	t_vectors	*lightsource;
+} t_fixedcevts;
 
 typedef struct s_info_fordraw
 {
@@ -61,21 +59,29 @@ typedef struct s_info_fordraw
 }t_info_fordraw;
 
 typedef struct	s_data {
-	t_vectors		fixedpoint_vec;
+	t_fixedcevts	fixedpoint_vec;
 	t_info_fordraw	info_fordraw;
 	double			screenwidth;
 	double			screenheight;
 } t_data;
 
-t_vector	*vectorsum_dim(t_vector *cont1, t_vector *cont2);
-t_vector	*vectorminus_dim(t_vector *cont1, t_vector *cont2);
-double		vectorinpuro_dim(t_vector *cont1, t_vector *cont2);
 double		constrain(double num, double min, double max);
-double 		map(double num, double min, double max, double t_min, double t_max);
-void    	ready_persevector(t_vector *vector, double x, double y, double z);
+double		map(double num, double min, double max, double t_min, double t_max);
+void		construct(t_data *info);
+void		exec(t_data *info, int x_start, int y_start);
+
+//vectorset
+void		ready_vector(t_vectors *vectors, double x, double y, double z);
+void		unitvect_set(t_vectors *sub);
+t_vectors	*dim_to_tdim(t_vectors *t_dim, double x, double y, double width, double height);
+
+//handlingvector
+t_vectors	*vectorsum(t_vector *cont1, t_vector *cont2);
+t_vectors	*vectorminus(t_vector *cont1, t_vector *cont2);
+double		vectorinpuro(t_vector *cont1, t_vector *cont2);
+t_vectors	*vectoroupro(t_vector *cont1, t_vector *cont2);
+//calc_utils
 double		vector_size(t_vector *vec);
-void	    construct(t_data *info);
-void	    exec(t_data *info, int x_start, int y_start);
-void		unitvect_set(t_vector *sub);
+
 
 #endif

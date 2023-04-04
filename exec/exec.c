@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/03 18:56:05 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/04 23:07:26 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,43 +70,31 @@ void	ready_pointvector(t_vector *point, double x, double y, int WIDTH, int HEIGH
 
 void    exec(t_data *info, int x_start, int y_start)
 {
-    t_vector	*eye_scrn;
-    t_vector    *eye_shapemid;
-    t_vector    *shapemid_shapeis;
-    t_vector    o_shapeis;
-    t_vector    *shapeis_lit;
-    t_vector    shapeis_lit_unitvec;
-    t_vector    shapemid_shapeis_unitvec;
-    t_vector    *parsevect;
+    t_vectors	*eye_scrn;
+    t_vectors   *eye_shapemid;
+    t_vectors   *shapemid_shapeis;
+    t_vectors    o_shapeis;
+    t_vectors    *shapeis_lit;
+    t_vector		*parsevect;
     double    l_n_inpro;
-    double    size;
-
     double    r = 1;
-    size_t    i = 0;
     double    t;
 
+	parsevect = &(info->fixedpoint_vec.parse_vec->vect);
     while (y_start != info->screenheight)
 	{
 		while (x_start != info->screenwidth)
 		{
-			ready_pointvector(info->fixedpoint_vec.onepointvec, x_start, y_start, info->screenwidth, info->screenheight);
-			eye_scrn = vectorminus_dim(info->fixedpoint_vec.onepointvec, info->fixedpoint_vec.parse_vec);
-			eye_shapemid = vectorminus_dim(info->fixedpoint_vec.parse_vec, info->fixedpoint_vec.shape_midvec);
-			if (d_coeffi(eye_scrn, eye_shapemid, r) >= 0)
+			dim_to_tdim(info->fixedpoint_vec.onepointvec, x_start, y_start, (int)info->screenwidth, (int)info->screenheight);
+			eye_scrn = vectorminus(&(info->fixedpoint_vec.onepointvec->vect), &(info->fixedpoint_vec.parse_vec->vect));
+			eye_shapemid = vectorminus(&(info->fixedpoint_vec.parse_vec->vect), &(info->fixedpoint_vec.shape_midvec->vect));
+			if (d_coeffi(&(eye_scrn->vect), &(eye_shapemid->vect), r) >= 0)
             {
-                t = intersection_on_circle(eye_scrn, eye_shapemid, r);
-                parsevect = info->fixedpoint_vec.parse_vec;
-                ready_persevector(&o_shapeis, parsevect->x + (eye_scrn->x * t), parsevect->y + (eye_scrn->y * t), parsevect->z + (eye_scrn->z * t));
-                shapeis_lit = vectorminus_dim(info->fixedpoint_vec.lightsource, &o_shapeis);
-                size = vector_size(shapeis_lit);
-                ready_persevector(&shapeis_lit_unitvec, shapeis_lit->x / size, shapeis_lit->y / size, shapeis_lit->z / size);
-                shapemid_shapeis = vectorminus_dim(&o_shapeis, info->fixedpoint_vec.shape_midvec);
-                size = vector_size(shapemid_shapeis);
-                ready_persevector(&shapemid_shapeis_unitvec, shapemid_shapeis->x / size, shapemid_shapeis->y / size, shapemid_shapeis->z / size);
-                l_n_inpro = vectorinpuro_dim(&shapemid_shapeis_unitvec, &shapeis_lit_unitvec);
-                if (l_n_inpro > 0)
-                    i++;
-                l_n_inpro = map(l_n_inpro, -1, 1, 0, 1);
+                t = intersection_on_circle(&(eye_scrn->vect), &(eye_shapemid->vect), r);
+                ready_vector(&o_shapeis, parsevect->x + (eye_scrn->vect.x * t), parsevect->y + (eye_scrn->vect.y * t), parsevect->z + (eye_scrn->vect.z * t));
+                shapeis_lit = vectorminus(&(info->fixedpoint_vec.lightsource->vect), &(o_shapeis.vect));
+                shapemid_shapeis = vectorminus(&(o_shapeis.vect), &(info->fixedpoint_vec.shape_midvec->vect));
+                l_n_inpro = map(vectorinpuro(&(shapemid_shapeis->unitvect), &(shapeis_lit->unitvect)), -1, 1, 0, 1);
                 my_mlx_pixel_put(info, x_start, y_start, ((int)(255 * l_n_inpro) << 16) | ((int)(255 * l_n_inpro) << 8) | (int)(255 * l_n_inpro));
                 free(shapeis_lit);
                 free(shapemid_shapeis);
@@ -120,7 +108,6 @@ void    exec(t_data *info, int x_start, int y_start)
 		y_start++;
 		x_start = 0;
 	}
-    printf("%ld\n", i);
 	mlx_put_image_to_window(info->info_fordraw.mlx, info->info_fordraw.mlx_win, info->info_fordraw.img, 0, 0);
 	mlx_loop(info->info_fordraw.mlx);
 }
