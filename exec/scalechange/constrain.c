@@ -1,28 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   putpixcel.c                                        :+:      :+:    :+:   */
+/*   constrain.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/04 23:35:37 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/05 21:33:10 by mochitteiun      ###   ########.fr       */
+/*   Created: 2023/03/31 23:54:48 by mochitteiun       #+#    #+#             */
+/*   Updated: 2023/04/05 11:42:45 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../miniRT.h"
 
-void	draw_fadecolor(double i, t_data *data, int x, int y)
+double	constrain(double num, double min, double max)
 {
-	if (i > 1)
-		i = 1;
-	my_mlx_pixel_put(data, x, y, ((int)(255 * i) << 16) | ((int)(255 * i) << 8) | (int)(255 * i));
+	if (min > num)
+		return (min);
+	else if (min <= num && num <= max)
+		return (num);
+	else
+		return (max);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+double map(double num, double min, double max, double t_min, double t_max)
 {
-	char	*dst;
+	double	constrain_num;
+	double	tmp;
 
-	dst = data->info_fordraw.addr + (y * data->info_fordraw.line_length + x * (data->info_fordraw.bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	constrain_num = constrain(num, min, max);
+	tmp = t_min + (t_max - t_min) * constrain_num / (max - min);
+	if (tmp < t_min)
+		return (t_min);
+	else
+		return (tmp);
 }

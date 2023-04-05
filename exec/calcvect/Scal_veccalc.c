@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   putpixcel.c                                        :+:      :+:    :+:   */
+/*   Scal_veccalc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/04 23:35:37 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/05 21:33:10 by mochitteiun      ###   ########.fr       */
+/*   Created: 2023/04/05 21:48:26 by mochitteiun       #+#    #+#             */
+/*   Updated: 2023/04/05 21:58:02 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../miniRT.h"
 
-void	draw_fadecolor(double i, t_data *data, int x, int y)
+void	scal_vecsum(t_vectors *scal_vecsum, t_vector *no_weight, t_vector *weight, double wgh)
 {
-	if (i > 1)
-		i = 1;
-	my_mlx_pixel_put(data, x, y, ((int)(255 * i) << 16) | ((int)(255 * i) << 8) | (int)(255 * i));
-}
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->info_fordraw.addr + (y * data->info_fordraw.line_length + x * (data->info_fordraw.bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	scal_vecsum->vect.x = no_weight->x + wgh * weight->x;
+	scal_vecsum->vect.y = no_weight->y + wgh * weight->y;
+	scal_vecsum->vect.z = no_weight->z + wgh * weight->z;
+	scal_vecsum->size = vector_size(&scal_vecsum->vect);
+	unitvect_set(scal_vecsum);
 }
