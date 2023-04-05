@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/05 21:57:18 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/05 23:14:00 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,41 @@ static	double	shade_draw(t_data *info, t_vectors *eye_scrn, t_vectors *eye_shape
 
 void    exec(t_data *info, int x_start, int y_start)
 {
-    t_vectors	eye_scrn;
-    t_vectors   eye_shapemid;
-	double    	r = 1;
+    t_vectors		eye_scrn;
+    t_vectors   	eye_shapemid;
+	t_vectors		nearest_sphere;
+	t_shapelists	*lists;
+	double    		r = 1;
+	double			distance_row;
 
     while (y_start != info->screenheight)
 	{
 		while (x_start != info->screenwidth)
 		{
+			distance_row = 2;
+			lists = info->shape_lists;
 			dim_to_tdim(info->fixedpoint_vec.onepointvec, x_start, y_start, (int)info->screenwidth, (int)info->screenheight);
 			vectorminus(&eye_scrn, &(info->fixedpoint_vec.onepointvec->vect), &(info->fixedpoint_vec.parse_vec->vect));
-			vectorminus(&eye_shapemid, &(info->fixedpoint_vec.parse_vec->vect), &(info->fixedpoint_vec.shape_midvec->vect));
-			if (d_coeffi(&(eye_scrn.vect), &(eye_shapemid.vect), r) >= 0)
-				draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &eye_shapemid, r), info, x_start, y_start);
-			else
+			//各物体ごとに繰り返し計算すべき箇所 最後まで繰り返すべき
+			while (lists != NULL)
+			{
+				vectorminus(&eye_shapemid, &(info->fixedpoint_vec.parse_vec->vect), &(lists->list.sphere->sphere_vec.vect));
+				if (d_coeffi(&(eye_scrn.vect), &(eye_shapemid.vect), lists->list.sphere->r) >= 0)
+				{
+					if (distance_row > intersection_on_circle(&(eye_scrn.vect), &(eye_shapemid.vect), lists->list.sphere->r) && distance_row != 0)
+					{
+						nearest_sphere = eye_shapemid;
+						distance_row = intersection_on_circle(&(eye_scrn.vect), &(eye_shapemid.vect), lists->list.sphere->r);
+						r = lists->list.sphere->r;
+					}
+				}
+				lists = lists->next;
+			}
+			//ここまで
+			if (distance_row == 2)
 				my_mlx_pixel_put(info, x_start, y_start, 0x00FF00FF);
+			else
+				draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &nearest_sphere, r), info, x_start, y_start);
 			x_start++;
 		}
 		y_start++;

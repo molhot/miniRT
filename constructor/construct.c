@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:25:28 by user              #+#    #+#             */
-/*   Updated: 2023/04/05 21:37:18 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/05 23:16:01 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,28 @@ static	void	ready_lsinfo(t_light_source *info)
 	info->Ii = 1.0;
 }
 
+static	void	ready_shapelists(t_data *info)
+{
+	info->shape_lists = malloc(sizeof(t_shapelists) * 1);
+	//本当はここで元となるファイルをもとにワイルをかける
+	info->shape_lists->list.sphere = malloc(sizeof(t_sphere) * 1);
+	info->shape_lists->list.plane = NULL;
+	info->shape_lists->list.cone = NULL;
+	ready_vector(&(info->shape_lists->list.sphere->sphere_vec), 0, 0, 5);
+	info->shape_lists->list.sphere->r = 1;
+	info->shape_lists->next = malloc(sizeof(t_shapelists) * 1);
+	info->shape_lists->next->list.sphere = malloc(sizeof(t_sphere) * 1);
+	info->shape_lists->next->list.plane = NULL;
+	info->shape_lists->next->list.cone = NULL;
+	ready_vector(&(info->shape_lists->next->list.sphere->sphere_vec), 1, 0, 1);
+	info->shape_lists->next->list.sphere->r = 1;
+	info->shape_lists->next->next = NULL;
+}
+
 void	construct(t_data *info)
 {
 	ready_mlx(info);
 	ready_vect(info);
 	ready_lsinfo(&(info->lsinf));
+	ready_shapelists(info);
 }

@@ -68,10 +68,8 @@ typedef	struct s_plane{
 }t_plane;
 
 typedef	struct s_sphere{
-	double	middle_x;
-	double	middle_y;
-	double	middle_z;
-	double	r;
+	t_vectors	sphere_vec;
+	double		r;
 }t_sphere;
 
 typedef	struct s_shapelist{
@@ -102,6 +100,7 @@ typedef struct s_light_source {
 typedef struct	s_data {
 	t_fixedcevts	fixedpoint_vec;
 	t_info_fordraw	info_fordraw;
+	t_shapelists	*shape_lists;
 	t_light_source	lsinf;
 	double			screenwidth;
 	double			screenheight;
