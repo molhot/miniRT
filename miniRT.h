@@ -121,6 +121,7 @@ typedef struct	s_data {
 
 //construct
 void		construct(t_data *info);
+void		ready_only_vector(t_vector *vectors, double x, double y, double z);
 
 //exec
 void		exec(t_data *info, int x_start, int y_start);

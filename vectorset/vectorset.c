@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 18:35:13 by user              #+#    #+#             */
-/*   Updated: 2023/04/04 23:13:28 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/06 07:53:23 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ void	ready_vector(t_vectors *vectors, double x, double y, double z)
 	vectors->vect.z = z;
 	vectors->size = vector_size(&vectors->vect);
 	unitvect_set(vectors);
+}
+
+void	ready_only_vector(t_vector *vectors, double x, double y, double z)
+{
+	vectors->x = x;
+	vectors->y = y;
+	vectors->z = z;
 }
 
 void	unitvect_set(t_vectors *sub)

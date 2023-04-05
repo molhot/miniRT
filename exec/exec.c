@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/06 07:45:02 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/06 07:55:20 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void    exec(t_data *info, int x_start, int y_start)
 					if (vectorinpuro(&eye_scrn.vect, &(lists->list.plane->n)) != 0)
 					{
 						tmp_disrow = intersection_on_plane(&(info->fixedpoint_vec.parse_vec->vect), &(info->fixedpoint_vec.onepointvec->vect), lists->list.plane);
-						if (tmp_disrow != 0 && tmp_disrow > distance_row)
+						if (tmp_disrow != 0 && tmp_disrow < distance_row)
 						{
 							distance_row = tmp_disrow;
 							show_sphe = list_p;
@@ -139,7 +139,10 @@ void    exec(t_data *info, int x_start, int y_start)
 				if (typech(lists->list) == CIRCLE)
 					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &nearest_sphere, lists->list.sphere->r), info, x_start, y_start);
 				else if (typech(lists->list) == PLANE)
+				{
+					printf("check\n");
 					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + draw_color_plane(info, &eye_scrn, lists->list.plane), info, x_start, y_start);
+				}
 			}
 			x_start++;
 		}
