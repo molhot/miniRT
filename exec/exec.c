@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/05 23:14:00 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/06 03:33:50 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,27 @@ static	double	attenuation_rate(double n_l, t_vectors *eye_scrn, t_vectors *shape
 
 static	double	shade_draw(t_data *info, t_vectors *eye_scrn, t_vectors *eye_shapemid, double r)
 {
-	t_vectors   shapemid_shapeis;
-    t_vectors   o_shapeis;
-    t_vectors   shapeis_lit;
-	double		n_l;
+	t_vectors		shapemid_shapeis;
+    t_vectors		o_shapeis;
+    t_vectors		shapeis_lit;
+	t_light_sources	*lsi_p;
+	double			n_l;
+	double			RsRd;
 
+	RsRd = 0;
 	scal_vecsum(&o_shapeis, &(info->fixedpoint_vec.parse_vec->vect), &(eye_scrn->vect), intersection_on_circle(&(eye_scrn->vect), &(eye_shapemid->vect), r));
-	vectorminus(&shapeis_lit, &(info->fixedpoint_vec.lightsource->vect), &(o_shapeis.vect));
-	vectorminus(&shapemid_shapeis, &(o_shapeis.vect), &(info->fixedpoint_vec.shape_midvec->vect));
-	n_l = map(vectorinpuro(&(shapemid_shapeis.unitvect), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
-	return (pow(attenuation_rate(map(n_l, -1, 1, 0, 1), eye_scrn, &shapeis_lit, &shapemid_shapeis), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l);
+	//ここから光源の個数分だけ繰り返し
+	lsi_p = info->lsinfs;
+	while (lsi_p != NULL)
+	{
+		vectorminus(&shapeis_lit, &(lsi_p->lsi->vect), &(o_shapeis.vect));
+		vectorminus(&shapemid_shapeis, &(o_shapeis.vect), &(info->fixedpoint_vec.shape_midvec->vect));
+		n_l = n_l + map(vectorinpuro(&(shapemid_shapeis.unitvect), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
+		RsRd = RsRd + pow(attenuation_rate(map(n_l, -1, 1, 0, 1), eye_scrn, &shapeis_lit, &shapemid_shapeis), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l;
+		lsi_p = lsi_p->next;
+	}
+	//足したものをリターン
+	return (RsRd);
 }
 
 void    exec(t_data *info, int x_start, int y_start)

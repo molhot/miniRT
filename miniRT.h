@@ -32,12 +32,12 @@ typedef	struct s_vectors
 	double		size;
 }t_vectors;
 
-typedef struct s_ambientlight
-{
-	double radiance;
-	double reflection_coefficient;
-	double intensity;
-} t_ambientlight;
+// typedef struct s_ambientlight
+// {
+// 	double radiance;
+// 	double reflection_coefficient;
+// 	double intensity;
+// } t_ambientlight;
 
 typedef struct s_fixedcevts
 {
@@ -85,6 +85,13 @@ struct s_shapelists{
 	t_shapelists	*next;
 };
 
+typedef struct s_light_sources t_light_sources;
+
+struct s_light_sources{
+	t_vectors		*lsi;
+	t_light_sources	*next;
+};
+
 typedef struct s_light_source {
 	double	ka;
 	double	kd;
@@ -102,6 +109,7 @@ typedef struct	s_data {
 	t_info_fordraw	info_fordraw;
 	t_shapelists	*shape_lists;
 	t_light_source	lsinf;
+	t_light_sources	*lsinfs;
 	double			screenwidth;
 	double			screenheight;
 } t_data;

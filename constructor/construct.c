@@ -6,7 +6,7 @@
 /*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:25:28 by user              #+#    #+#             */
-/*   Updated: 2023/04/05 23:16:01 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/06 03:34:59 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,25 @@ static	void	ready_shapelists(t_data *info)
 	info->shape_lists->next->next = NULL;
 }
 
+static	void	ready_lightsources(t_data *info)
+{
+	t_light_sources	*lsinfs;
+
+	info->lsinfs = malloc(sizeof(t_light_sources) * 1);
+	lsinfs = info->lsinfs;
+	lsinfs->lsi = malloc(sizeof(t_vectors) * 1);
+	ready_vector(lsinfs->lsi, -5, 5, -5);
+	lsinfs->next = malloc(sizeof(t_light_sources) * 1);
+	lsinfs = info->lsinfs->next;
+	lsinfs->lsi = malloc(sizeof(t_vectors) * 1);
+	ready_vector(lsinfs->lsi, 5, 10, -5);
+}
+
 void	construct(t_data *info)
 {
 	ready_mlx(info);
 	ready_vect(info);
 	ready_lsinfo(&(info->lsinf));
 	ready_shapelists(info);
+	ready_lightsources(info);
 }
