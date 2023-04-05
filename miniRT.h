@@ -13,6 +13,10 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# define CIRCLE 1
+# define PLANE 2
+# define CORN 3
+
 # include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -65,6 +69,7 @@ typedef	struct s_cone{
 typedef	struct s_plane{
 	t_vector	n;
 	t_vector	point;
+	double		k;
 }t_plane;
 
 typedef	struct s_sphere{
@@ -123,8 +128,10 @@ void		my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void		draw_fadecolor(double i, t_data *data, int x, int y);
 double		d_coeffi(t_vector *dir_vec, t_vector *dir_tomiddlecir, double r);
 double		intersection_on_circle(t_vector *dir_vec, t_vector *dir_tomiddlecir, double r);
+double		intersection_on_plane(t_vector *o_eye, t_vector *o_scr, t_plane *plane);
 double		constrain(double num, double min, double max);
 double		map(double num, double min, double max, double t_min, double t_max);
+int			typech(t_shapelist list);
 
 //vectorset
 void		ready_vector(t_vectors *vectors, double x, double y, double z);

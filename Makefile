@@ -9,6 +9,7 @@ SRCS = miniRT_main.c\
 			exec/calcvect/calc_its.c\
 			exec/calcvect/Scal_veccalc.c\
 			exec/drawfunc/putpixcel.c\
+			exec/type_ch.c\
 		handling_vector/calc_utils.c\
 		vectorset/vectorset.c\
 
