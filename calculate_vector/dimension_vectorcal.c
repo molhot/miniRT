@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dimension_vectorcal.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 15:38:49 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/02 16:34:21 by user             ###   ########.fr       */
+/*   Updated: 2023/04/03 18:42:42 by mochitteiun      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ t_vector	*vectorsum_dim(t_vector *cont1, t_vector *cont2)
 
 t_vector	*vectorminus_dim(t_vector *cont1, t_vector *cont2)
 {
-	t_vector	*sum_vector;
+	t_vector	*minus_vector;
 
-	sum_vector = malloc(sizeof(t_vector) * 1);
-	sum_vector->x = cont1->x - cont2->x;
-	sum_vector->y = cont1->y - cont2->y;
-	sum_vector->z = cont1->z - cont2->z;
+	minus_vector = malloc(sizeof(t_vector) * 1);
+	minus_vector->x = cont1->x - cont2->x;
+	minus_vector->y = cont1->y - cont2->y;
+	minus_vector->z = cont1->z - cont2->z;
 
-	return (sum_vector);
+	return (minus_vector);
 }
 
 double	vectorinpuro_dim(t_vector *cont1, t_vector *cont2)
@@ -60,24 +60,10 @@ double	vector_size(t_vector *vec)
 	return (sqrt(sum_pow)); 
 }
 
-/*test
-int main()
+void	unitvect_set(t_vector *sub)
 {
-	t_vector	v1;
-	t_vector	v2;
-	t_vector	*v3;
-
-	(v1.x) = 3;
-	(v1.y) = 6;
-	(v1.z) = 9;
-
-	(v2.x) = 3;
-	(v2.y) = 6;
-	(v2.z) = 9;
-
-	v3 = vectorsum_dim(&v1, &v2);
-	printf("%d\n", v3->x);
-	printf("%d\n", v3->y);
-	printf("%d\n", v3->z);
+	sub->size = vector_size(sub);
+	sub->unitvect.x = sub->x / sub->size;
+	sub->unitvect.y = sub->y / sub->size;
+	sub->unitvect.z = sub->z / sub->size;
 }
-*/

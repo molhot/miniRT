@@ -2,11 +2,16 @@ NAME = miniRT
 LIBMLX = minilibx-linux/libmlx_Linux.a
 
 SRCS = miniRT_main.c\
-		utils/constrain.c\
 		constructor/construct.c\
 		exec/exec.c\
-		calculate_vector/dimension_vectorcal.c\
-		vector_utils/ready_parsevector.c
+			exec/scalechange/constrain.c\
+			exec/calcvect/CalcVars_vec.c\
+			exec/calcvect/calc_its.c\
+			exec/calcvect/Scal_veccalc.c\
+			exec/drawfunc/putpixcel.c\
+			exec/type_ch.c\
+		handling_vector/calc_utils.c\
+		vectorset/vectorset.c\
 
 OBJS = $(SRCS:.c=.o)
 
