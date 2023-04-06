@@ -17,6 +17,8 @@
 # define PLANE 2
 # define CORN 3
 
+# define shadowray_epsiron 1.0/512
+
 # include <math.h>
 # include <stdio.h>
 # include <stdlib.h>

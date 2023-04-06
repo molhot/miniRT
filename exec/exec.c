@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/07 07:44:26 by user             ###   ########.fr       */
+/*   Updated: 2023/04/07 08:43:35 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static	double	attenuation_rate(double n_l, t_vectors *eye_scrn, t_vectors *shape
 	return (map(vectorinpuro(&(r_.unitvect), &(v.unitvect)), -1, 1, 0, 1));
 }
 
-static	double	shade_draw(t_data *info, t_vectors *eye_scrn, t_vectors *eye_shapemid, double r)
+static	double	shade_draw(t_data *info, t_vectors *eye_scrn, t_vectors *eye_shapemid, t_sphere *sph)
 {
 	t_vectors		shapemid_shapeis;
     t_vectors		o_shapeis;
@@ -36,13 +36,13 @@ static	double	shade_draw(t_data *info, t_vectors *eye_scrn, t_vectors *eye_shape
 	double			RsRd;
 
 	RsRd = 0;
-	scal_vecsum(&o_shapeis, &(info->fixedpoint_vec.parse_vec->vect), &(eye_scrn->vect), intersection_on_circle(&(eye_scrn->vect), &(eye_shapemid->vect), r));
+	scal_vecsum(&o_shapeis, &(info->fixedpoint_vec.parse_vec->vect), &(eye_scrn->vect), intersection_on_circle(&(eye_scrn->vect), &(eye_shapemid->vect), sph->r));
 	//ここから光源の個数分だけ繰り返し
 	lsi_p = info->lsinfs;
 	while (lsi_p != NULL)
 	{
 		vectorminus(&shapeis_lit, &(lsi_p->lsi->vect), &(o_shapeis.vect));
-		vectorminus(&shapemid_shapeis, &(o_shapeis.vect), &(info->fixedpoint_vec.shape_midvec->vect));//おかしいかも
+		vectorminus(&shapemid_shapeis, &(o_shapeis.vect), &(sph->sphere_vec.vect));//おかしいかも
 		n_l = map(vectorinpuro(&(shapemid_shapeis.unitvect), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
 		RsRd = RsRd + pow(attenuation_rate(map(n_l, -1, 1, 0, 1), eye_scrn, &shapeis_lit, &shapemid_shapeis), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l;
 		lsi_p = lsi_p->next;
@@ -76,14 +76,13 @@ static	double	draw_color_plane(t_data *info, t_vectors *eye_scrn, t_plane *plane
 	RsRd = 0;
 	scal_vecsum(&o_planeits, &(info->fixedpoint_vec.parse_vec->vect), &(eye_scrn->vect), intersection_on_plane(&(info->fixedpoint_vec.parse_vec->vect), &(info->fixedpoint_vec.onepointvec->vect), plane));
 	lsi_p = info->lsinfs;
-	while (lsi_p != NULL)
-	{
-		vectorminus(&shapeis_lit, &(lsi_p->lsi->vect), &(o_planeits.vect));
-		n_l = map(vectorinpuro(&(plane->n), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
-		RsRd = RsRd + pow(annotation_plane(n_l, eye_scrn, &(plane->n), &shapeis_lit), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l;
-		lsi_p = lsi_p->next;
-	}
-	printf("%lf\n", RsRd);
+	// while (lsi_p != NULL)
+	// {
+	vectorminus(&shapeis_lit, &(lsi_p->lsi->vect), &(o_planeits.vect));
+	n_l = map(vectorinpuro(&(plane->n), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
+	RsRd = RsRd + pow(annotation_plane(n_l, eye_scrn, &(plane->n), &shapeis_lit), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l;
+	lsi_p = lsi_p->next;
+	// }
 	return (RsRd);
 }
 
@@ -104,7 +103,7 @@ void    exec(t_data *info, int x_start, int y_start)
 		{
 			list_p = 0;
 			show_sphe = -1;
-			distance_row = 2;
+			distance_row = 100000;
 			lists = info->shape_lists;
 			dim_to_tdim(info->fixedpoint_vec.onepointvec, x_start, y_start, (int)info->screenwidth, (int)info->screenheight);
 			vectorminus(&eye_scrn, &(info->fixedpoint_vec.onepointvec->vect), &(info->fixedpoint_vec.parse_vec->vect));
@@ -117,7 +116,7 @@ void    exec(t_data *info, int x_start, int y_start)
 					if (d_coeffi(&(eye_scrn.vect), &(eye_shapemid.vect), lists->list.sphere->r) >= 0)
 					{
 						tmp_disrow = intersection_on_circle(&(eye_scrn.vect), &(eye_shapemid.vect), lists->list.sphere->r);
-						if (distance_row > tmp_disrow)
+						if (distance_row > tmp_disrow && tmp_disrow != 0)
 						{
 							nearest_sphere = eye_shapemid;
 							distance_row = tmp_disrow;
@@ -155,7 +154,7 @@ void    exec(t_data *info, int x_start, int y_start)
 					t++;
 				}
 				if (typech(lists->list) == 1)
-					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &nearest_sphere, lists->list.sphere->r), info, x_start, y_start);
+					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &nearest_sphere, lists->list.sphere), info, x_start, y_start);
 				else if (typech(lists->list) == 2)
 					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + draw_color_plane(info, &eye_scrn, lists->list.plane), info, x_start, y_start);
 			}
