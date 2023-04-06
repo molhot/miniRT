@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   calc_its.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 23:29:30 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/06 07:41:28 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/07 07:42:30 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,12 @@ double  intersection_on_circle(t_vector *dir_vec, t_vector *dir_tomiddlecir, dou
 
 double  intersection_on_plane(t_vector *o_eye, t_vector *o_scr, t_plane *plane)
 {
-	double	myu;
+	double      myu;
+    t_vectors   eye_scr;
+    double      tmp;
 
-	myu = (plane->k - vectorinpuro(&(plane->n), o_eye)) / (vectorinpuro(&(plane->n), o_scr) - vectorinpuro(&(plane->n), o_eye));
-	myu = map(myu, -1, 1, 0, 1);
+    vectorminus(&eye_scr, o_scr, o_eye);
+    tmp = vectorinpuro(&(plane->point), &(plane->n)) -  vectorinpuro(o_eye, &(plane->n));
+	myu = tmp / (vectorinpuro(&(eye_scr.vect), &(plane->n)));
 	return (myu);
 }

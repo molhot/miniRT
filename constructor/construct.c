@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   construct.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:25:28 by user              #+#    #+#             */
-/*   Updated: 2023/04/06 07:53:03 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/07 07:37:24 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ static	void	ready_shapelists(t_data *info)
 {
 	info->shape_lists = malloc(sizeof(t_shapelists) * 1);
 	//本当はここで元となるファイルをもとにワイルをかける
-	info->shape_lists->list.sphere = malloc(sizeof(t_sphere) * 1);
-	info->shape_lists->list.plane = NULL;
+	info->shape_lists->list.plane = malloc(sizeof(t_plane) * 1);
+	info->shape_lists->list.sphere = NULL;
 	info->shape_lists->list.cone = NULL;
-	ready_vector(&(info->shape_lists->list.sphere->sphere_vec), 0, 0, 5);
-	info->shape_lists->list.sphere->r = 1;
+	ready_only_vector(&(info->shape_lists->list.plane->n), 0, 1, 0);
+	ready_only_vector(&(info->shape_lists->list.plane->point), 0, -1, 0);
 
 	info->shape_lists->next = malloc(sizeof(t_shapelists) * 1);
 	info->shape_lists->next->list.sphere = malloc(sizeof(t_sphere) * 1);
@@ -60,16 +60,16 @@ static	void	ready_shapelists(t_data *info)
 	ready_vector(&(info->shape_lists->next->list.sphere->sphere_vec), 1, 0, 1);
 	info->shape_lists->next->list.sphere->r = 1;
 
-	info->shape_lists->next->next = malloc(sizeof(t_shapelists) * 1);
-	info->shape_lists->next->next->list.plane = malloc(sizeof(t_plane) * 1);
-	info->shape_lists->next->next->list.sphere = NULL;
-	info->shape_lists->next->next->list.cone = NULL;
-	ready_only_vector(&(info->shape_lists->next->next->list.plane->n), 0, 1, 0);
-	ready_only_vector(&(info->shape_lists->next->next->list.plane->point), 0, -1, 0);
-	t_plane *plane;
-	plane = info->shape_lists->next->next->list.plane;
-	info->shape_lists->next->next->list.plane->k = vectorinpuro(&(plane->n), &(plane->point));
-	info->shape_lists->next->next->next = NULL;
+	info->shape_lists->next->next = NULL;
+	// info->shape_lists->next->next->list.plane = malloc(sizeof(t_plane) * 1);
+	// info->shape_lists->next->next->list.sphere = NULL;
+	// info->shape_lists->next->next->list.cone = NULL;
+	// ready_only_vector(&(info->shape_lists->next->next->list.plane->n), 0, 1, 0);
+	// ready_only_vector(&(info->shape_lists->next->next->list.plane->point), 0, -2, 0);
+	// t_plane *plane;
+	// plane = info->shape_lists->next->next->list.plane;
+	// info->shape_lists->next->next->list.plane->k = vectorinpuro(&(plane->n), &(plane->point));
+	// info->shape_lists->next->next->next = NULL;
 }
 
 static	void	ready_lightsources(t_data *info)
@@ -84,6 +84,7 @@ static	void	ready_lightsources(t_data *info)
 	lsinfs = info->lsinfs->next;
 	lsinfs->lsi = malloc(sizeof(t_vectors) * 1);
 	ready_vector(lsinfs->lsi, 5, 10, -5);
+	lsinfs->next->next = NULL;
 }
 
 void	construct(t_data *info)

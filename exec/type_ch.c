@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   type_ch.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mochitteiunon? <sakata19991214@gmail.co    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 06:21:56 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/06 06:37:49 by mochitteiun      ###   ########.fr       */
+/*   Updated: 2023/04/06 19:51:23 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	typech(t_shapelist list)
 {
 	if (list.cone != NULL)
 		return (CORN);
-	if (list.plane != NULL)
+	else if (list.plane != NULL)
 		return (PLANE);
-	if (list.sphere != NULL)
+	else if (list.sphere != NULL)
 		return (CIRCLE);
 	return (0);
 }

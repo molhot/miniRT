@@ -69,7 +69,6 @@ typedef	struct s_cone{
 typedef	struct s_plane{
 	t_vector	n;
 	t_vector	point;
-	double		k;
 }t_plane;
 
 typedef	struct s_sphere{
