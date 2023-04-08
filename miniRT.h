@@ -22,6 +22,7 @@
 # include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include "minilibx-linux/mlx.h"
 
 typedef	struct s_vector
@@ -127,7 +128,7 @@ void		ready_only_vector(t_vector *vectors, double x, double y, double z);
 //exec
 void		exec(t_data *info, int x_start, int y_start);
 void		my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void		draw_fadecolor(double i, t_data *data, int x, int y);
+void		draw_fadecolor(double i, t_data *data, int x, int y, int type);
 double		d_coeffi(t_vector *dir_vec, t_vector *dir_tomiddlecir, double r);
 double		intersection_on_circle(t_vector *dir_vec, t_vector *dir_tomiddlecir, double r);
 double		intersection_on_plane(t_vector *o_eye, t_vector *o_scr, t_plane *plane);

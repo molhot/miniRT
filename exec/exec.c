@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 17:09:10 by mochitteiun       #+#    #+#             */
-/*   Updated: 2023/04/07 08:43:35 by user             ###   ########.fr       */
+/*   Updated: 2023/04/07 20:08:18 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,31 @@ static	double	shade_draw(t_data *info, t_vectors *eye_scrn, t_vectors *eye_shape
 	return (RsRd);
 }
 
+static	bool	its_withotheritem(t_data *info, t_vector *o_its)
+{
+	t_shapelists	*itemlist;
+	t_vectors		its_lih;
+	t_vectors		ep_o_its;
+	t_vectors		its_mid;
+	double			epsiron;
+
+	epsiron = 1/512;
+	itemlist = info->shape_lists;
+	scal_vecsum(&ep_o_its, o_its, &info->lsinfs->lsi->unitvect, epsiron);
+	vectorminus(&its_lih, &(info->lsinfs->lsi->vect), &ep_o_its.vect);
+	while (itemlist != NULL)
+	{
+		if (typech(itemlist->list) == CIRCLE)
+		{
+			vectorminus(&its_mid, &(itemlist->list.sphere->sphere_vec.vect), &ep_o_its.vect);
+			if (d_coeffi(&its_lih.vect, &its_mid.vect, itemlist->list.sphere->r) > 0)
+				return (false);
+		}
+		itemlist = itemlist->next;
+	}
+	return (true);
+}
+
 static	double	annotation_plane(double n_l, t_vectors *eye_scrn, t_vector *n, t_vectors *shapeis_lit)
 {
 	t_vectors	r_;
@@ -76,13 +101,18 @@ static	double	draw_color_plane(t_data *info, t_vectors *eye_scrn, t_plane *plane
 	RsRd = 0;
 	scal_vecsum(&o_planeits, &(info->fixedpoint_vec.parse_vec->vect), &(eye_scrn->vect), intersection_on_plane(&(info->fixedpoint_vec.parse_vec->vect), &(info->fixedpoint_vec.onepointvec->vect), plane));
 	lsi_p = info->lsinfs;
-	// while (lsi_p != NULL)
-	// {
-	vectorminus(&shapeis_lit, &(lsi_p->lsi->vect), &(o_planeits.vect));
-	n_l = map(vectorinpuro(&(plane->n), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
-	RsRd = RsRd + pow(annotation_plane(n_l, eye_scrn, &(plane->n), &shapeis_lit), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l;
-	lsi_p = lsi_p->next;
-	// }
+	//光源の扱いの中で影を付与する処理を進める
+	if (its_withotheritem(info, &o_planeits.vect) != false)
+	{
+		while (lsi_p != NULL)
+		{
+			vectorminus(&shapeis_lit, &(lsi_p->lsi->vect), &(o_planeits.vect));
+			n_l = map(vectorinpuro(&(plane->n), &(shapeis_lit.unitvect)), -1, 1, 0, 1);
+			RsRd = RsRd + pow(annotation_plane(n_l, eye_scrn, &(plane->n), &shapeis_lit), info->lsinf.alpha) * info->lsinf.ks * info->lsinf.Ii + info->lsinf.kd * info->lsinf.Ii * n_l;
+			lsi_p = lsi_p->next;
+		}
+	}
+	//ここまで
 	return (RsRd);
 }
 
@@ -154,9 +184,9 @@ void    exec(t_data *info, int x_start, int y_start)
 					t++;
 				}
 				if (typech(lists->list) == 1)
-					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &nearest_sphere, lists->list.sphere), info, x_start, y_start);
+					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + shade_draw(info, &eye_scrn, &nearest_sphere, lists->list.sphere), info, x_start, y_start, 1);
 				else if (typech(lists->list) == 2)
-					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + draw_color_plane(info, &eye_scrn, lists->list.plane), info, x_start, y_start);
+					draw_fadecolor(info->lsinf.ka * info->lsinf.Ia + draw_color_plane(info, &eye_scrn, lists->list.plane), info, x_start, y_start, 2);
 			}
 			x_start++;
 		}
